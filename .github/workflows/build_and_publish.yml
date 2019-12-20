@@ -1,0 +1,19 @@
+name: Hello workflow
+
+on: push
+
+jobs:
+  hello_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: login
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: docker login --username=$DOCKERHUB_USERNAME --password=$DOCKERHUB_PASSWORD
+      - name: build
+        run: docker build . -t kvaidas/hello-python
+      - name: upload
+        run: docker push kvaidas/hello-python
